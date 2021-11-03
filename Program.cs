@@ -47,13 +47,29 @@ namespace Class_10
                     // list post for blog
                     using (var db = new BlogContext())
                     {
-                        var blogies = db.Blogs;
-                        var posts = db.Posts;
+                        var bloogies = db.Blogs;
+                        var posts = db.Posts.ToList();
+                        
+                        System.Console.WriteLine("here is the list of blogs");
+                        foreach (var blogerinos in db.Blogs)
+                        {
+                            System.Console.WriteLine($"Blog: {blogerinos.BlogId}: {blogerinos.Name}");
+                        }
+                        System.Console.WriteLine("which blogs posts would you like to see?");
+                        var blogPostsSelected = Convert.ToInt32(Console.ReadLine());
+
+                        posts = posts.Where(l => l.BlogId == blogPostsSelected).ToList();
+
+                        var blogForPost = bloogies.Where(s => s.BlogId == blogPostsSelected).FirstOrDefault();
+
+                        var x = new Post();
+                        x.BlogId = blogPostsSelected;
 
                         foreach (var posties in posts)
                         {
-                            System.Console.WriteLine($"Posts: {posties.PostId} {posties.Title}");
+                            System.Console.WriteLine($"Blog: {blogForPost.Name} Posts: {posties.Title} {posties.Content}");
                         }
+
                     }
                 } else if (choice == 4)
                 {
@@ -74,9 +90,14 @@ namespace Class_10
                     System.Console.WriteLine("Enter post titles");
                     var postTitle = Console.ReadLine();
 
+                    System.Console.WriteLine("enter the content of the post");
+                    var content = Console.ReadLine();
+
+
                     var post = new Post();
                     post.Title = postTitle;
                     post.BlogId = selection;
+                    post.Content = content;
 
                     using (var db = new BlogContext())
                     {
